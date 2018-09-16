@@ -1,11 +1,5 @@
 const random = require("lodash.random");
 
-let hand = []; //Where we keep the cards in hand. 
-let handSize = 7;
-let landsPerTurn = 1;
-let drawsPerTurn = 1;
-
-
 function fact(n) {
     let i = n;
     let f = 1;
@@ -50,31 +44,53 @@ const garp = function(array, size) { //Get All Repetitive Permutations.
     return output;
 };
 
-// End of copied code. 
+//End of copied code. 
 
-// let oneType = ["a"];
-// let oneGarp = garp(["a"], 5); 
+const sampleCards = [
+    {type:"spell", cmc:3, mana:"u"},
+    {type:"land", mana:"w"}
+];
 
-// console.log(oneTypeOutput);
-// const oneTypeSet = Array.from(new Set(oneTypeOutput));
-// console.log(oneTypeSet);
-// console.log(`Array length is ${oneTypeOutput.length}, set length is ${oneTypeSet.length}`);
-// console.log("");
+function playAGame(initialDeck, handSize, cardsPerTurn, landsPerTurn, onThePlay, totalTurns) {
+    let deck = initialDeck.slice();
+    let hand = [];
+    let board = [];
+    //let manaAvailable = [];
+    let totalManaSpent = 0;
+    let manaSpent = [];
+
+    shuffle(deck);
+
+    for (let i = 0; i < handsize; i++){
+        draw(hand, deck);
+    }
+
+    checkForMulligan(hand, deck);
+
+    for (let i = 1; i <= totalTurns; i++){
+        manaSpent[i] = playATurn(deck, hand, board);
+    }
+
+    return {
+        manaSpent
+    };
+}
+
+function draw(hand, deck){
+    hand.push(deck.pop());
+}
+
+function playATurn(deck, hand, board) {
+    let manaSpent = 0;
+    //need to find the combo of spells that spends the most mana;
 
 
-// let twoTypes = ["a", "b"];
-// let twoTypesOutput = garp(twoTypes, 3); 
+    return manaSpent;
+}
 
-// garp(twoTypes, 3); 
-// console.log(twoTypesOutput);
-// console.log("");
+function checkForMulligan(hand, deck) {
 
-// let threeTypes = ["a", "b", "c"];
-// let threeTypesOutput = garp(threeTypes, 3); 
-// console.log(threeTypesOutput);
-// print(`Length is ${threeTypesOutput.length}`);
-
-
+}
 
 module.exports = {
     fact,
