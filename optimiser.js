@@ -61,19 +61,17 @@ function playAGame(initialDeck, handSize, cardsPerTurn, landsPerTurn, onThePlay,
 
     shuffle(deck);
 
-    for (let i = 0; i < handsize; i++){
+    for (let i = 0; i < handSize; i++){
         draw(hand, deck);
     }
 
-    checkForMulligan(hand, deck);
+    checkForMulligan(hand, deck, handSize);
 
     for (let i = 1; i <= totalTurns; i++){
         manaSpent[i] = playATurn(deck, hand, board);
     }
 
-    return {
-        manaSpent
-    };
+    return manaSpent;
 }
 
 function draw(hand, deck){
@@ -88,13 +86,44 @@ function playATurn(deck, hand, board) {
     return manaSpent;
 }
 
-function checkForMulligan(hand, deck) {
+function checkForMulligan(hand, deck, handSize) {
+    let ihs = hand.length; //Initial Hand Size
+    let mana = 0;
+    let spells = new Array(8).fill(0);
 
+    hand.map ((card) => {
+        if( card.type == "land") {
+            mana++;
+        } else if (card.type == "spell") {
+            spells[card.cmc]++;
+        } else {
+            console.log("Bad card type in mulligan check")
+        }
+
+    });
+
+    if (ihs == 4) {
+        return;
+    } else if (mana < 2 || mana > (handSize-2) ) {
+        mulligan(hand, deck);
+        checkForMulligan(hand, deck);
+    } 
+
+}
+
+function mulligan(hand, deck) {
+    let ihs = hand.length;
+    deck = deck.concat(hand);
+    shuffle(deck);
+    for (let i = 0; i < ihs; i++){
+        draw(hand, deck);
+    }
 }
 
 module.exports = {
     fact,
     shuffle,
-    garp
+    garp,
+    mulligan
 };
 
