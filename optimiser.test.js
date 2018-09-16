@@ -72,20 +72,30 @@ test("Shuffle is relatively uniform for 3 items", ()=> {
     //console.log(outputString);
 });
 
+const oneGarp = garp(["a"], 5);               //Length 1.
+const twoGarp = garp(["b", "c"], 3);          //Length 2^3 = 8
+const threeGarp = garp(["d", "e", "f"], 3);   //Length 3^3 = 27
+const bigGarp = garp(["w", "x", "y", "z"], 10); //Length 4^10 = 1,048,576
+
 test("garp output contains no duplicates", ()=> {
     function checkUniques(array) {
         const set = Array.from(new Set(array));
         expect(set.length).toEqual(array.length);
     }
 
-    let oneGarp = garp(["a"], 5);               //Length 1.
-    let twoGarp = garp(["b", "c"], 3);          //Length 2^3 = 8
-    let threeGarp = garp(["d", "e", "f"], 3);   //Length 3^3 = 27
-    let bigGarp = garp(["w", "x", "y", "z"], 10); //Length 4^10 = 1,048,576
+    
     
     checkUniques(oneGarp);
     checkUniques(twoGarp);
     checkUniques(threeGarp);
     checkUniques(bigGarp);
 
+});
+
+test("garp outputs the correct number of permutations", () => {
+    // # of permutations = (number of options) ^ (number of slots)
+    expect(oneGarp.length).toBe(1);
+    expect(twoGarp.length).toBe(8);
+    expect(threeGarp.length).toBe(27);
+    expect(bigGarp.length).toBe(1048576); 
 });
