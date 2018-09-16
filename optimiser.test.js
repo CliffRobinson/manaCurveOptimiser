@@ -1,5 +1,5 @@
 const optimiser = require("./optimiser");
-const { fact, shuffle } = optimiser;
+const { fact, shuffle, garp } = optimiser;
 
 test("Test suite running", () => {
     expect(true).toBeTruthy();
@@ -38,17 +38,18 @@ test("Shuffle is relatively uniform for 2 items", ()=> {
             record[stringy]++;
         }        
     }
+    //let outputString = "";
     Object.keys(record).map(key => {
         expect(record[key]).toBeLessThan(enfep*(1+range));
         expect(record[key]).toBeGreaterThan(enfep*(1-range));
-        console.log(`${key}: ${record[key]}`);
+        //outputString +=`${key}: ${record[key]}\n`;
     });
-
+    //console.log(outputString);
 });
 
 test("Shuffle is relatively uniform for 3 items", ()=> {
     let record = {};
-    const n = 800000;
+    const n = 600000;
     const range = 0.01;
     const deck = ["a","b", "c"];
     const enfep = n/fact(deck.length); //Expected N For Each Permutation
@@ -62,10 +63,29 @@ test("Shuffle is relatively uniform for 3 items", ()=> {
             record[stringy]++;
         }        
     }
+    //let outputString = "";
     Object.keys(record).map(key => {
         expect(record[key]).toBeLessThan(enfep*(1+range));
         expect(record[key]).toBeGreaterThan(enfep*(1-range));
-        console.log(`${key}: ${record[key]}`);
+        //outputString +=`${key}: ${record[key]}\n`;
     });
+    //console.log(outputString);
+});
+
+test("garp output contains no duplicates", ()=> {
+    function checkUniques(array) {
+        const set = Array.from(new Set(array));
+        expect(set.length).toEqual(array.length);
+    }
+
+    let oneGarp = garp(["a"], 5);               //Length 1.
+    let twoGarp = garp(["b", "c"], 3);          //Length 2^3 = 8
+    let threeGarp = garp(["d", "e", "f"], 3);   //Length 3^3 = 27
+    let bigGarp = garp(["w", "x", "y", "z"], 10); //Length 4^10 = 1,048,576
+    
+    checkUniques(oneGarp);
+    checkUniques(twoGarp);
+    checkUniques(threeGarp);
+    checkUniques(bigGarp);
 
 });
