@@ -63,14 +63,14 @@ const garp = function(array, size, multiple = 1, ceilings) { //Get All Repetitiv
     return output;
 };
 
-function garpwInput(array, size, inputArray){
+function garpwInput(array, size, inputArray, multiple = 1, ceilings){
     if (size < inputArray.length) {
         console.log(`Can't make array size ${size} when input has ${inputArray.length} entries`);
         return;
     }
     let input = inputArray.slice();
     let output = [];
-    getRPermuts(array, size, input, output);
+    getRPermuts(array, size, input, output, multiple, ceilings);
     return output;
 }
 
