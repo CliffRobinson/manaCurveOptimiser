@@ -104,7 +104,7 @@ let quarterGarp = garpwInput(actualchoices, 10, input, 1, quarterCeilings);
 endTime = new Date().getTime();
 console.log(`Time taken for quarterGarp was ${endTime - startTime}, length is ${quarterGarp.length}`);
 
-console.log("\n//Trying at a half size");
+console.log("\n//Trying at a half size, needs multiples");
 //Deck size is 20
 //Minimum lands is 8
 //Max lands is 12
@@ -116,14 +116,26 @@ const halfCeilings = {
 };
 
 input = new Array(8).fill(actualchoices[0]).concat(new Array(2).fill(actualchoices[4]));
-
+console.log(`input length is`, input.length);
 startTime = new Date().getTime();
-let halfGarp = garpwInput(actualchoices, 20, input, 3, halfCeilings);
+let halfGarp = garpwInput(actualchoices, 20, input, 2, halfCeilings);
 endTime = new Date().getTime();
 console.log(`Time taken for halfGarp was ${endTime - startTime}, length is ${halfGarp.length}`);
 
-//console.log("\n//Trying at full size");
+console.log("\n//Trying at full size");
 //Deck size is 40
 //Minimum lands is 15
 //Max lands is 22
 //Min four drops is 4.
+
+const fullCeilings = {
+    maxes:[22, null, null, null, null, null, null, null],
+    current:[0]
+};
+
+input = new Array(15).fill(actualchoices[0]).concat(new Array(4).fill(actualchoices[4]));
+console.log(`input length is`, input.length);
+startTime = new Date().getTime();
+let fullGarp = garpwInput(actualchoices, 40, input, 3, fullCeilings);
+endTime = new Date().getTime();
+console.log(`Time taken for fullGarp was ${endTime - startTime}, length is ${fullGarp.length}`);
