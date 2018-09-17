@@ -1,5 +1,5 @@
 const optimiser = require("./optimiser");
-const { fact, shuffle, garp, draw, checkForMulligan, mulligan, sampleCards, show } = optimiser;
+const { fact, shuffle, garp, draw, checkForMulligan, mulligan, sampleCards, show, garpwInput } = optimiser;
 
 test("Test suite running", () => {
     expect(true).toBeTruthy();
@@ -103,6 +103,29 @@ test("garp outputs the correct number of permutations", () => {
 const spell = sampleCards[0];
 const land = sampleCards[1];
 
+test("garpwInput will not create permutations below the floor number.", () => {
+    //Arrange
+    const array = [1,2,3];
+    const input = [1,1,1];
+    const reducer = (total, num) => {
+        if (num == 1) {
+            return total+1;
+        } else {
+            return total;
+        }
+    };
+    //Act
+    const output = garpwInput(array, 6, input);
+
+    //Assert
+    output.map((permut) => {
+        const oneCount = permut.reduce(reducer,0);
+        expect(oneCount).toBeGreaterThanOrEqual(3);
+    });
+    expect(output.length).toEqual(27);
+});
+
+
 test("draw behaves correctly.", ()=> {
 
     let deck = [land, spell, spell, spell, spell, land, spell];
@@ -185,3 +208,4 @@ test("checkForMulligan will mull 7-landers", () =>{
     expect(deck.length).toBeGreaterThan(23);
     expect(hand.length).toBeLessThan(7);
 });
+

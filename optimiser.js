@@ -26,9 +26,7 @@ const getRPermuts = function(array, size, initialStuff, output) {
     if (initialStuff.length >= size) {
         output.push(initialStuff);
     } else {
-        var i;
-		
-        for (i = 0; i < array.length; ++i) {	
+        for (let i = 0; i < array.length; ++i) {	
             getRPermuts(array, size, initialStuff.concat(array[i]), output);
         }
     }
@@ -39,6 +37,18 @@ const garp = function(array, size) { //Get All Repetitive Permutations.
     getRPermuts(array, size, [], output);
     return output;
 };
+
+function garpwInput(array, size, inputArray){
+    if (size < inputArray.length) {
+        console.log(`Can't make array size ${size} when input has ${inputArray.length} entries`);
+        return;
+    }
+    let input = inputArray.slice();
+    let output = [];
+    getRPermuts(array, size, input, output);
+    return output;
+}
+
 
 //End of copied code. 
 
@@ -152,6 +162,7 @@ module.exports = {
     draw,
     checkForMulligan, 
     sampleCards,
-    show
+    show,
+    garpwInput
 };
 
