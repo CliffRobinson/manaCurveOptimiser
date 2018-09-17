@@ -20,10 +20,6 @@ function shuffle(deck) {
     }
 }
 
-function print(string){
-    console.log(string);
-}
-
 // Code taken from https://www.ibm.com/developerworks/community/blogs/hazem/entry/javascript_getting_all_possible_permutations?lang=en
 
 const getRPermuts = function(array, size, initialStuff, output) {
@@ -86,7 +82,7 @@ function playATurn(deck, hand, board) {
     return manaSpent;
 }
 
-function checkForMulligan(hand, deck, handSize) {
+function checkForMulligan(hand, deck, handSize, callback) {
     let ihs = hand.length; //Initial Hand Size
     let mana = 0;
     let spells = new Array(8).fill(0);
@@ -97,33 +93,65 @@ function checkForMulligan(hand, deck, handSize) {
         } else if (card.type == "spell") {
             spells[card.cmc]++;
         } else {
-            console.log("Bad card type in mulligan check")
+            console.log("Bad card type in mulligan check");
         }
 
     });
 
-    if (ihs == 4) {
-        return;
-    } else if (mana < 2 || mana > (handSize-2) ) {
-        mulligan(hand, deck);
-        checkForMulligan(hand, deck);
+    //console.log(`Hand is ${show(hand)}`);
+    //console.log(`Mana is ${mana}`);
+
+    if (ihs > 4 && (mana < 2 || mana == ihs)) {
+        let mulledCards =  mulligan(hand, deck);
+        let newHand = mulledCards.hand;
+        let newDeck = mulledCards.deck;
+        
+        if (callback) {callback(hand, deck);}
+
+        let newMulledCards = checkForMulligan(newHand, newDeck);
+        let newNewHand = newMulledCards.hand;
+        let newNewDeck = newMulledCards.deck;
+
+        return {
+            hand: newNewHand,
+            deck: newNewDeck
+        };
+    } else {
+        return {hand, deck};
     } 
 
 }
 
 function mulligan(hand, deck) {
     let ihs = hand.length;
+    //console.log(`IHS is ${ihs}`);
     deck = deck.concat(hand);
+    //console.log(`Deck in mull is ${deck}`);
+
+    hand = [];
     shuffle(deck);
-    for (let i = 0; i < ihs; i++){
+    //console.log(`hand in mull is ${hand}`);
+    for (let i = 1; i < ihs; i++){ //draw one less cards than previously. 
         draw(hand, deck);
+        //console.log(`drawing ${hand[hand.length-1]}`);
     }
+    return {hand, deck};
+}
+
+function show(cards) {
+    let output = [];
+    cards.map((card, i) => output.push(`${i}:${card.type}`));
+    return output.join();
 }
 
 module.exports = {
     fact,
     shuffle,
     garp,
-    mulligan
+    mulligan, 
+    draw,
+    checkForMulligan, 
+    sampleCards,
+    show
 };
 
