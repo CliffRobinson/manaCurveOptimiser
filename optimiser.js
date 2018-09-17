@@ -85,8 +85,8 @@ const sampleCards = [
 function playAGame(initialDeck, handSize, cardsPerTurn, landsPerTurn, onThePlay, totalTurns) {
     let deck = initialDeck.slice();
     let hand = [];
-    let board = [];
-    //let manaAvailable = [];
+    
+    let manaAvailable = 0;
     let totalManaSpent = 0;
     let manaSpent = [];
 
@@ -96,10 +96,13 @@ function playAGame(initialDeck, handSize, cardsPerTurn, landsPerTurn, onThePlay,
         draw(hand, deck);
     }
 
-    checkForMulligan(hand, deck, handSize);
+    const mulledCards = checkForMulligan(hand, deck, handSize);
+    hand = mulledCards.hand;
+    deck = mulledCards.deck;
 
     for (let i = 1; i <= totalTurns; i++){
-        manaSpent[i] = playATurn(deck, hand, board);
+        console.log(`Turn ${i}`);
+        manaSpent[i] = playATurn(deck, hand, manaAvailable, landsPerTurn);
     }
 
     return manaSpent;
@@ -109,8 +112,22 @@ function draw(hand, deck){
     hand.push(deck.pop());
 }
 
-function playATurn(deck, hand, board) {
+function playATurn(parentDeck, hand, parentManaAvailable, landsPerTurn ) {
+    let deck = parentDeck.slice();
     let manaSpent = 0;
+    let landsPlayed = 0;
+    let manaAvailable = parentManaAvailable;
+    //draw a card
+    draw(hand, deck);
+    //find if the hand contains a land and if so play it. 
+    for (let i = 0; i < hand.length; i++) {
+        if(deck[i].type == "land" && landsPlayed < landsPerTurn) {
+            manaAvailable++;
+            //console.log("I'm playin mah land for turn.")
+            deck.splice(i,1);
+        }
+    }
+
     //need to find the combo of spells that spends the most mana;
 
 
@@ -188,6 +205,7 @@ module.exports = {
     checkForMulligan, 
     sampleCards,
     show,
-    garpwInput
+    garpwInput,
+    playATurn
 };
 
