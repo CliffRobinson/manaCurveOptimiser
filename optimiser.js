@@ -20,21 +20,46 @@ function shuffle(deck) {
     }
 }
 
+const ceilingsMax = [24, null, null, null, null, null, null, null];
+let ceilingscurrent = [0, null, null, null, null, null, null, null];
+
+let ceilings = {
+    maxes: ceilingsMax,
+    current: ceilingscurrent
+};
+
 // Code taken from https://www.ibm.com/developerworks/community/blogs/hazem/entry/javascript_getting_all_possible_permutations?lang=en
 
-const getRPermuts = function(array, size, initialStuff, output) {
+const getRPermuts = function(array, size, initialStuff, output, multiple = 1, ceilings) {
     if (initialStuff.length >= size) {
         output.push(initialStuff);
     } else {
-        for (let i = 0; i < array.length; ++i) {	
-            getRPermuts(array, size, initialStuff.concat(array[i]), output);
+        for (let i = 0; i < array.length; ++i) {
+            let spaceLeft = size - initialStuff.length;        
+            let amountToAdd = Math.min(spaceLeft, multiple);
+
+            let stuffToAdd = new Array(amountToAdd).fill(array[i]);
+
+            if (ceilings && ceilings.maxes[i] !== null) {
+                if (((ceilings.current[i]) + amountToAdd) <= ceilings.maxes[i]){
+                    const newCeilings = {
+                        maxes: ceilings.maxes,
+                        current: ceilingscurrent
+                    };
+                    newCeilings.current[i] += amountToAdd;
+                    getRPermuts(array, size, initialStuff.concat(stuffToAdd), output, multiple, newCeilings);
+                } //Else do nothing
+            } else {
+                getRPermuts(array, size, initialStuff.concat(stuffToAdd), output, multiple, ceilings);
+            }
+            
         }
     }
 };
 
-const garp = function(array, size) { //Get All Repetitive Permutations.
+const garp = function(array, size, multiple = 1, ceilings) { //Get All Repetitive Permutations.
     let output = [];
-    getRPermuts(array, size, [], output);
+    getRPermuts(array, size, [], output, multiple, ceilings);
     return output;
 };
 
